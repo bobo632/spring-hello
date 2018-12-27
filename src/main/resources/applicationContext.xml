@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-       <bean name="calendarObj1" class="java.util.GregorianCalendar"/>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+        default-init-method="init" default-destroy-method="destory">
+    <bean name="calendarObj1" class="java.util.GregorianCalendar"/>
+    <bean name="calendarObj3" class="java.util.GregorianCalendar"/>
+    <bean name="dataObj" factory-bean="calendarObj3" factory-method="getTime" />
+    <bean name="calendarObj2" class="java.util.Calendar" factory-method="getInstance"/>
+    <bean name="exampleBean1" class="com.sunyx.test.ExampleBean1" lazy-init="true"/>
+    <bean name="exampleBean" class="com.sunyx.test.ExampleBean" scope="singleton" init-method="init" destroy-method="destory"
+            lazy-init="true" depends-on="exampleBean1"/>
+
+    <bean name="dataSource" class="com.sunyx.util.MyDataSource">
+        <property name="driver" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@10.143.24.36:1521:ACTTEST1"/>
+        <property name="username" value="uop_param"/>
+        <property name="password" value="1qazwsxopparam"/>
+    </bean>
+    <bean name="userDaoImpl" class="com.sunyx.dao.impl.UserDaoImpl">
+        <constructor-arg name="myDataSource" ref="dataSource"/>
+    </bean>
+    <bean name="userServiceImpl" class="com.sunyx.service.impl.UserServiceImpl" autowire="byType"/>
+
 </beans>
