@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                               http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                               	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd"
         default-init-method="init" default-destroy-method="destory">
     <bean name="calendarObj1" class="java.util.GregorianCalendar"/>
     <bean name="calendarObj3" class="java.util.GregorianCalendar"/>
@@ -9,9 +15,9 @@
     <bean name="calendarObj2" class="java.util.Calendar" factory-method="getInstance"/>
     <bean name="exampleBean1" class="com.sunyx.test.ExampleBean1" lazy-init="true"/>
     <bean name="exampleBean" class="com.sunyx.test.ExampleBean" scope="singleton" init-method="init" destroy-method="destory"
-            lazy-init="true" depends-on="exampleBean1"/>
-
-    <bean name="dataSource" class="com.sunyx.util.MyDataSource">
+             depends-on="exampleBean1"/>
+    <alias name="calendarObj1" alias="name1"/>
+    <bean name="dataSource" class="com.sunyx.MyDataSource">
         <property name="driver" value="oracle.jdbc.OracleDriver"/>
         <property name="url" value="jdbc:oracle:thin:@10.143.24.36:1521:ACTTEST1"/>
         <property name="username" value="uop_param"/>
@@ -21,5 +27,86 @@
         <constructor-arg name="myDataSource" ref="dataSource"/>
     </bean>
     <bean name="userServiceImpl" class="com.sunyx.service.impl.UserServiceImpl" autowire="byType"/>
+    <bean name="car" class="com.sunyx.domain.Car"/>
+    <bean name="user" class="com.sunyx.domain.User">
+        <constructor-arg name="username" value="111"/>
+        <constructor-arg name="password" value="222"/>
+        <constructor-arg name="iphone" value="333"/>
+        <constructor-arg name="car" ref="car"/>
+    </bean>
+    <bean name="user1" class="com.sunyx.domain.User">
+        <constructor-arg index="0" value="111"/>
+        <constructor-arg index="1" value="222"/>
+        <constructor-arg index="2" value="333"/>
+        <constructor-arg index="3" ref="car"/>
+    </bean>
+
+    <bean name="user3" class="com.sunyx.domain.User">
+        <property name="username" value="123"/>
+        <property name="password" value="1234"/>
+        <property name="iphone" value="12345"/>
+        <property name="car" ref="car"/>
+    </bean>
+    <bean name="user4" class="com.sunyx.domain.User" p:car-ref="car" p:iphone="111" p:password="222" p:username="333"/>
+    <bean name="user5" class="com.sunyx.domain.User">
+        <property name="username" value="#{'111'}"/>
+        <property name="password" value="#{'222'}"/>
+        <property name="iphone" value="#{'333'}"/>
+        <property name="car" value="#{car}"/>
+    </bean>
+
+    <bean name="car1" class="com.sunyx.domain.Car">
+        <!--String数组的注入-->
+        <property name="strs">
+            <list>
+                <value>121</value>
+                <value>122</value>
+                <value>123</value>
+            </list>
+        </property>
+        <!--Set集合的注入-->
+        <property name="set">
+            <set>
+                <value>121</value>
+                <value>122</value>
+                <value>123</value>
+            </set>
+        </property>
+        <!--List的注入-->
+        <property name="list">
+            <list>
+                <value>121</value>
+                <value>122</value>
+                <value>123</value>
+            </list>
+        </property>
+        <!--Map的注入-->
+        <property name="map">
+            <map>
+                <entry key="111" value="222"/>
+                <entry key="222" value="333"/>
+                <entry key="333" value="444"/>
+            </map>
+        </property>
+        <!--Properties类型的注入-->
+        <property name="prop">
+            <props>
+                <prop key="123">1234</prop>
+                <prop key="111">1111</prop>
+                <prop key="222">2222</prop>
+            </props>
+        </property>
+    </bean>
+    <util:properties location="classpath:jdbc.properties" id="jdbcProperties"/>
+    <bean name="dataSource1" class="com.sunyx.MyDataSource">
+        <property name="driver" value="#{jdbcProperties.driver}"/>
+        <property name="url" value="#{jdbcProperties.url}"/>
+        <property name="username" value="#{jdbcProperties.username}"/>
+        <property name="password" value="#{jdbcProperties.password}"/>
+    </bean>
+    <!--扫描类注解-->
+    <context:component-scan base-package="com.sunyx"/>
+    <!--在没有扫描类的情况下，使用属性注解-->
+    <context:annotation-config/>
 
 </beans>

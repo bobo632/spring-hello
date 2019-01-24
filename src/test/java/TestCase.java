@@ -1,4 +1,5 @@
 import com.sunyx.dao.IUserDao;
+import com.sunyx.domain.Car;
 import com.sunyx.domain.User;
 import com.sunyx.service.IUserService;
 import com.sunyx.test.ExampleBean;
@@ -10,8 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by liuli on 2018/12/26.
@@ -25,7 +25,7 @@ public class TestCase {
     }
 
     @Test
-    public void test2() {
+       public void test2() {
         String conf = "applicationContext.xml";
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
         Calendar calendar = applicationContext.getBean("calendarObj1", Calendar.class);
@@ -59,6 +59,7 @@ public class TestCase {
     public void test6() {
         String conf = "applicationContext.xml";
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
+        applicationContext.getBean("exampleBean",ExampleBean.class);
         AbstractApplicationContext aac = (AbstractApplicationContext)applicationContext;
         aac.close();
     }
@@ -89,6 +90,58 @@ public class TestCase {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
         IUserService userService = applicationContext.getBean("userServiceImpl", IUserService.class);
         System.out.println(userService.login("haha","123"));
+    }
+    @Test
+    public void test10() {
+        String conf= "applicationContext.xml";
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
+        ExampleBean exampleBean = applicationContext.getBean("exampleBean", ExampleBean.class);
+        exampleBean.execute();
+    }
+    @Test
+    public void test11() {
+        String conf= "applicationContext.xml";
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
+        User user = applicationContext.getBean("user", User.class);
+        System.out.println(user);
+    }
+    @Test
+    public void test12() {
+        String conf= "applicationContext.xml";
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
+        User user = applicationContext.getBean("user3", User.class);
+        System.out.println(user);
+    }
+    @Test
+         public void test13() {
+        String conf= "applicationContext.xml";
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
+        User user = applicationContext.getBean("user4", User.class);
+        System.out.println(user);
+    }
+
+    @Test
+    public void test14() {
+        String conf= "applicationContext.xml";
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
+        User user = applicationContext.getBean("user5", User.class);
+        System.out.println(user);
+    }
+    @Test
+    public void test15() {
+        String conf= "applicationContext.xml";
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(conf);
+        Car car = applicationContext.getBean("car1", Car.class);
+        System.out.println(Arrays.toString(car.getStrs()));
+        System.out.println(car.getList());
+        System.out.println(car.getSet());
+        Map<String,String> map = car.getMap();
+        for(String key:map.keySet()){
+            String value= map.get(key);
+            System.out.println(key+":"+value);
+        }
+        Properties properties = car.getProp();
+        System.out.println(properties);
     }
 
 }

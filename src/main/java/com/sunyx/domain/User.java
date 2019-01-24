@@ -7,6 +7,22 @@ public class User {
     private String username;
     private String password;
     private String iphone;
+    private Car car;
+    public User() {
+    }
+
+    public User(String username, String password, String iphone) {
+        this.username = username;
+        this.password = password;
+        this.iphone = iphone;
+    }
+
+    public User(String username, String password, String iphone, Car car) {
+        this.username = username;
+        this.password = password;
+        this.iphone = iphone;
+        this.car = car;
+    }
 
     public String getUsername() {
         return username;
@@ -30,6 +46,14 @@ public class User {
 
     public void setIphone(String iphone) {
         this.iphone = iphone;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     @Override
